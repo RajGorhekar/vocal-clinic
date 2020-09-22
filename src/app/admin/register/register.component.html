@@ -1,0 +1,53 @@
+  
+<h3 class="mx-2 mt-3">Register a Doctor</h3>
+
+<form class='mt-4' #form="ngForm" autocomplete="off" (submit)="registerDoctor(form)">
+
+  <input type="hidden" name="id" #id="ngModel" [(ngModel)]="service.formData.id">
+  <div class="form-group">
+    <input name="name" #name="ngModel" [(ngModel)]="service.formData.name" class="form-control border-dan" placeholder="Full name" required>
+    <div *ngIf="name.invalid && name.touched" class="validation-error text-danger">This field is required.</div>
+  </div>
+  <div class="form-group">
+    <input type="email"  name="email" #name="ngModel" [(ngModel)]="service.formData.email" class="form-control" placeholder="Email ID" required>
+  </div>
+  <div class="form-group">
+    <input name="address" #position="ngModel" [(ngModel)]="service.formData.address" class="form-control" placeholder="address" required>
+  </div>
+  <div class="form-group">
+    <input name="contact" #empCode="ngModel" [(ngModel)]="service.formData.contact" class="form-control" placeholder="Phone Number" required>
+  </div>
+  <div class="form-group">
+    <input name="qualification" #mobile="ngModel" [(ngModel)]="service.formData.qualification" class="form-control" placeholder="Qualification" required>
+  </div>
+  <div class="form-group">
+    <input name="type" #mobile="ngModel" [(ngModel)]="service.formData.type" class="form-control" placeholder="Type" required>
+  </div>
+  <div [hidden]="id.value">
+    <div class="form-group">
+      <label for="file">Profile Picture :</label>
+      <br>
+      <input type="file" (change)="setProfileImage($event)" accept=".png,.jpg" required>
+      <input type="hidden" name="profilepic" #id="ngModel" [(ngModel)]="service.formData.profilepic">
+    </div>
+    <div class="form-group">
+      <label for="file">Signature :</label>
+      <br>
+      <input type="file" (change)="setSignatureImage($event)" accept=".png,.jpg" required>
+      <input type="hidden" name="signature" #id="ngModel" [(ngModel)]="service.formData.signature">
+    </div>
+  </div>
+  
+
+  <div>
+    <div class="form-group"  [hidden]="id.value">
+      <button type="submit" [disabled]="form.invalid" class="btn btn-lg btn-block btn-info">Register</button>
+    </div>
+    <div class="form-group"  [hidden]="!id.value">
+      <button type="submit" [disabled]="form.invalid" class="btn btn-lg btn-block btn-info">Update</button>
+    </div>
+  </div>
+
+
+  
+</form>

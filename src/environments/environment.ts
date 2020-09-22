@@ -3,7 +3,17 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  firebaseConfig : {
+    apiKey: "AIzaSyAlIkKyd1BSwI5apBoHmn8U_TC8LhuAiA8",
+    authDomain: "vocal-clinic.firebaseapp.com",
+    databaseURL: "https://vocal-clinic.firebaseio.com",
+    projectId: "vocal-clinic",
+    storageBucket: "vocal-clinic.appspot.com",
+    messagingSenderId: "987277804287",
+    appId: "1:987277804287:web:c644541fbd829585bd42ca",
+    measurementId: "G-VSTMMTMD72"
+  }
 };
 
 /*

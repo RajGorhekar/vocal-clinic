@@ -1,0 +1,33 @@
+<div class="container" [hidden]="!isadmin">
+  <div class="row">
+    <div class="col-md-5">
+      <app-register></app-register>
+    </div>
+    <div class="col-md-7">
+      <app-doctor-list></app-doctor-list>
+    </div>
+  </div>
+  <hr class="dotted">
+  <button (click)="logout()" class="badge badge-info">Logout</button>
+  <p>You are logged in as Admin</p>
+</div>
+
+
+<div [hidden]="isadmin">
+  <div class="container" [hidden]="isadmin">
+    <div style="width: 100%; display: flex; height: 100vh; justify-content: center; float: right; padding-top: 25%;">
+        <div class="row">
+             <div class="col-md-2 text-center">
+                  <p><i class="fa fa-exclamation-triangle fa-5x" style="color:rgb(6, 35, 35)"></i><br/>Status Code: 403</p>
+             </div>
+             <div class="col-md-10">
+                  <h3>OPPSSS!!!! Sorry...</h3>
+                  <h5>You are not logged in or you are not an Admin!</h5>
+                  <p>Sorry, your access is refused due to security reasons of our server and also our sensitive data.<br/>Please go back to the previous page to continue browsing.</p>
+                  <a class="btn btn-info" href="javascript:history.back()">Go Back and Login</a>
+             </div>
+        </div>
+   </div>
+</div>
+</div>
+  

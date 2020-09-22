@@ -1,0 +1,27 @@
+<table class="table table-hover">
+    <thead>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Mobile No</th>
+      <th>Address</th>
+      <th>Type</th>
+      <th>Qualification</th>
+      <th>profilepic</th>
+      <th>signature</th>
+      <th></th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let doc of list">
+        <td (click)="onEdit(doc)">{{doc.id}} - {{doc.name}}</td>
+        <td (click)="onEdit(doc)">{{doc.email}}</td>
+        <td (click)="onEdit(doc)">{{doc.contact}}</td>
+        <td (click)="onEdit(doc)">{{doc.address}}</td>
+        <td (click)="onEdit(doc)">{{doc.type}}</td>
+        <td (click)="onEdit(doc)">{{doc.qualification}}</td>
+        <td><img src="{{doc.profilepic}}" height=80px/></td>
+        <td><img src="{{doc.signature}}"  height=40px/></td>
+        <td><a class="btn text-danger" (click)="onDelete(doc.id)"><i class="fa fa-trash"></i></a></td>
+      </tr>
+    </tbody>
+  </table>
+

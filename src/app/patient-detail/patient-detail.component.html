@@ -1,0 +1,47 @@
+<style>
+    h5 {word-wrap: break-word;}
+    textarea {resize: none;}
+</style>
+<div class="container">
+    <div style="padding: 100px 0 80px 0;"></div>
+    <div class="col-md-7">
+        <table class="table table-hover">
+            <thead>
+              <th>Name</th>
+              <th>Gender</th>
+              <th>Age</th>
+              <th>Mobile No</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{patientInfo.name}}</td>
+                <td>{{patientInfo.gender}}</td>
+                <td>{{patientInfo.age}}</td>
+                <td>{{patientInfo.contact}}</td>
+              </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- <h5>You selected patient with id = {{patientId}}</h5> -->
+    <!-- <h6><b>Name :</b> {{patientInfo.name}} <b>Age :</b> {{patientInfo.gender}}</h6> -->
+    <div class="col-md-7">
+        <span><h6><b>Symptoms :</b> {{patientInfo.symptoms}}</h6></span>
+    </div>
+    <img style="position: absolute; z-index: -1; top: 0; border: 2px solid black; margin: -20px;" src=".././assets/template.png" height="1000" width="714">
+    <!-- <h6><b>Contact Info :</b> {{patientInfo.contact}}</h6> -->
+    <!-- <h6><b>Gender :</b> {{patientInfo.gender}}</h6> -->
+    <br>
+
+    <div class="form-group">
+        <label for="comment"><b>Prescription </b> :</label>
+        <textarea class="form-control" rows="5" id="comment" style="width: 675px; height: 265px; border: 1px solid black;" #presInput>{{patientInfo.prescription}}</textarea>
+    </div>
+
+    <div style="position: absolute;  bottom: 0; margin-bottom: -70px;">
+        <img src="{{doctor.signature}}" height="90">
+        <h5>{{doctor.type}} - <b><span style="font-weight: 900;">{{doctor.name}}</span></b></h5>
+    </div>
+</div>
+
+
+<button class="btn btn-info btn-circle" type="submit" (click) = 'editPrescription(presInput.value,doctor.name)' style="position: absolute; z-index: -1; bottom: 0; right:0; margin : 20px">Send</button>
