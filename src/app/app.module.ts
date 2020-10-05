@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule,BrowserTransferStateModule  } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AngularFireModule } from "@angular/fire";
@@ -26,6 +26,7 @@ import { DoctorComponent } from './doctor/doctor.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { PatientDetailComponent } from './patient-detail/patient-detail.component';
 import { LoginComponent } from './login/login.component';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -37,9 +38,11 @@ import { LoginComponent } from './login/login.component';
     PageNotFoundComponent,
     PatientDetailComponent,
     LoginComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,
+    BrowserTransferStateModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,

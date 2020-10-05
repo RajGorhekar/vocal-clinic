@@ -1,47 +1,63 @@
 <style>
-    h5 {word-wrap: break-word;}
-    textarea {resize: none;}
+    #template {
+        border: 1px solid black;
+        position: absolute;
+        margin: 1% auto 1% auto;
+        left: 0;
+        right: 0;
+        text-align: center;
+        z-index: -1;
+        height: 96%;
+        min-width: 650px;
+    }
+    textarea {
+        border: 1px solid black;
+        font-size: small;
+        overflow: auto;
+    }
 </style>
-<div class="container">
-    <div style="padding: 100px 0 80px 0;"></div>
-    <div class="col-md-7">
+
+
+<div class="container" style="left: 0; right: 0; margin-left: auto; margin-right: auto; max-width: 800px;">
+    <img id="template" src=".././assets/template.png">
+    <div class="container" style="min-width: 650px; width: 650px; position: absolute; top: 22%; left: 0; right: 0; bottom: 0;">
         <table class="table table-hover">
             <thead>
-              <th>Name</th>
-              <th>Gender</th>
-              <th>Age</th>
-              <th>Mobile No</th>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Age</th>
+                <th>Mobile No</th>
             </thead>
             <tbody>
-              <tr>
-                <td>{{patientInfo.name}}</td>
-                <td>{{patientInfo.gender}}</td>
-                <td>{{patientInfo.age}}</td>
-                <td>{{patientInfo.contact}}</td>
-              </tr>
+                <tr>
+                <td style="font-size: small;">{{patientInfo.name}}</td>
+                <td style="font-size: small;">{{patientInfo.gender}}</td>
+                <td style="font-size: small;">{{patientInfo.age}}</td>
+                <td style="font-size: small;">{{patientInfo.contact}}</td>
+                </tr>
             </tbody>
         </table>
-    </div>
-    <!-- <h5>You selected patient with id = {{patientId}}</h5> -->
-    <!-- <h6><b>Name :</b> {{patientInfo.name}} <b>Age :</b> {{patientInfo.gender}}</h6> -->
-    <div class="col-md-7">
-        <span><h6><b>Symptoms :</b> {{patientInfo.symptoms}}</h6></span>
-    </div>
-    <img style="position: absolute; z-index: -1; top: 0; border: 2px solid black; margin: -20px;" src=".././assets/template.png" height="1000" width="714">
-    <!-- <h6><b>Contact Info :</b> {{patientInfo.contact}}</h6> -->
-    <!-- <h6><b>Gender :</b> {{patientInfo.gender}}</h6> -->
-    <br>
+        <span><h6 style="font-size: small;"><b>Symptoms :</b> {{patientInfo.symptoms}}</h6></span>
 
-    <div class="form-group">
-        <label for="comment"><b>Prescription </b> :</label>
-        <textarea class="form-control" rows="5" id="comment" style="width: 675px; height: 265px; border: 1px solid black;" #presInput>{{patientInfo.prescription}}</textarea>
+        <div class="form-group" style="height: auto;">
+            <label for="comment"><b style="font-size: small;">Prescription :</b></label>
+            <div contenteditable="true" class="form-control" rows="5" id="comment" style="margin-top: 0px; margin-bottom: 0px; max-height: 220px;" #presInput>{{patientInfo.prescription}}</div>
+        </div>
+        <div>
+            <img src="{{doctor.signature}}" height="90">
+            <h4>{{doctor.type}} - <b><span style="font-weight: 900;">{{doctor.name}}</span></b></h4>
+        </div>
     </div>
 
-    <div style="position: absolute;  bottom: 0; margin-bottom: -70px;">
-        <img src="{{doctor.signature}}" height="90">
-        <h5>{{doctor.type}} - <b><span style="font-weight: 900;">{{doctor.name}}</span></b></h5>
-    </div>
 </div>
 
 
-<button class="btn btn-info btn-circle" type="submit" (click) = 'editPrescription(presInput.value,doctor.name)' style="position: absolute; z-index: -1; bottom: 0; right:0; margin : 20px">Send</button>
+<button class="btn btn-info" type="submit" (click) = 'editPrescription(presInput.value,doctor.name)' style="position: absolute; z-index: -1; bottom: 0; right:0; margin : 20px">Send</button>
+<button class="btn btn-success" type="submit" (click)="voiceSearch()"  id="mybtn" style="position: absolute; z-index: -1; bottom:50px; right:0; margin : 20px">{{this.valueForButton}}</button> 
+
+<form #gSearch method="GET" id="gSearch" action="https://www.google.com/search">
+    <div id="voicesearch" [hidden]="true">
+        <input #searchKey name="q" id="searchKey" type="hidden">
+        <div (click)="voiceSearch()" [hidden]="true"></div>
+    </div>
+</form>

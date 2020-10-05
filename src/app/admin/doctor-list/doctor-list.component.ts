@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { DoctorService } from 'src/app/shared/doctor.service';
 import { Doctor } from 'src/app/shared/doctor.model';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-doctor-list',
@@ -11,7 +12,12 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class DoctorListComponent implements OnInit {
 	list: Doctor[];
-	constructor(public service: DoctorService, private firestore: AngularFirestore, private toastr: ToastrService) {}
+	constructor(
+		public service: DoctorService,
+		private firestore: AngularFirestore,
+		private toastr: ToastrService,
+		private router: Router
+	) {}
 
 	ngOnInit() {
 		this.service.getDoctors().subscribe((actionArray) => {
@@ -26,7 +32,9 @@ export class DoctorListComponent implements OnInit {
 
 	onEdit(doc: Doctor) {
 		this.service.formData = Object.assign({}, doc);
-		
+	}
+
+	onClear(){
 	}
 
 	onDelete(id: string) {
@@ -34,5 +42,9 @@ export class DoctorListComponent implements OnInit {
 			this.firestore.doc('doctors/' + id).delete();
 			this.toastr.warning('', 'Deleted successfully');
 		}
+	}
+
+	gotoProfile(doc): void {
+		this.router.navigateByUrl('/profile', { state: { user: doc } });
 	}
 }

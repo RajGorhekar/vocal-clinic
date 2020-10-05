@@ -29,4 +29,5 @@ export class AdminComponent implements OnInit {
     localStorage.setItem('admin', 'false');
     this.router.navigate(['/login',]);
   }
+  
 }

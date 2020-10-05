@@ -5,6 +5,8 @@ import { DoctorComponent } from './doctor/doctor.component';
 import { LoginComponent } from './login/login.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { PatientDetailComponent } from './patient-detail/patient-detail.component';
+import { ProfileComponent } from './profile/profile.component';
+
 
 const routes: Routes = [
   {
@@ -16,8 +18,8 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'admin', component: AdminComponent },
   { path: 'doctor', component: DoctorComponent },
-
-  // { path: '**',   component: PageNotFoundComponent }
+  { path: 'profile', component: ProfileComponent },
+  { path: '**',   component: PageNotFoundComponent }
 
 ];
 

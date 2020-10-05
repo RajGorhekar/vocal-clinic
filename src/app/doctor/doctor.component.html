@@ -1,81 +1,100 @@
+<style>
+	#tabs:hover {
+		cursor: pointer;
+	}
+</style>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-md navbar-light bg-info fixed-top" [hidden]="!isloggedin">
+	<a class="navbar-brand text-white"><img src="../././assets/icon.png" height="30px" width="30px" style="border-radius: 5px;">  Vocal Clinic</a>
+	<button type="button" class="navbar-toggler bg-light" data-toggle="collapse" data-target="#nav">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse justify-content-between" id="nav">
+		<ul class="navbar-nav ml-auto">
+			<li class="nav-item">
+				<a class="nav-link text-light font-weight-bold px-3" (click)="gotoProfile()" id="tabs">Profile</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link text-light font-weight-bold px-3"  (click)="logout()" id="tabs">Logout</a>
+			</li>
+		</ul>
+	</div>
+</nav>
+
+
+
+<div class="container-fluid pt-5 mt-4 shadow bg-white rounded" [hidden]="!isloggedin">
+ 	<ul class="row" style="justify-content: space-evenly; ">
+		<div style="text-align: center;" >
+			<a id="tabs"(click)="toggleTab(0)" style="color :dodgerblue; font-weight: 900;" [hidden]="index===1">Not Answered</a>
+			<a id="tabs"(click)="toggleTab(0)" style="font-weight: 100;" [hidden]="index===0">Not Answered</a>
+			<div class="mt-2" style="background-color: black; width: 150px; margin-left: auto; margin-right: auto;height: 2px;" [hidden]="index===1"></div>
+		</div>
+		<div  style="text-align: center;">
+			<a id="tabs" (click)="toggleTab(1)" style="color :dodgerblue; font-weight: 900;" [hidden]="index===0">Answered</a>
+			<a id="tabs" (click)="toggleTab(1)" style=" font-weight: 900;" [hidden]="index===1">Answered</a>
+			<div class="mt-2" style="background-color: black; width: 150px; margin-left: auto; margin-right: auto;height: 2px;" [hidden]="index===0"></div>
+		</div>
+ 	</ul>
+</div>
+
+
+<!-- Error page -->
 <div class="container" [hidden]="isloggedin">
-    <div style="width: 100%; display: flex; height: 100vh; justify-content: center; float: right; padding-top: 25%;">
-        <div class="row">
-             <div class="col-md-2 text-center">
-                  <p><i class="fa fa-exclamation-triangle fa-5x" style="color:rgb(6, 35, 35)"></i><br/>Status Code: 403</p>
-             </div>
-             <div class="col-md-10">
-                  <h3>OPPSSS!!!! Sorry...</h3>
-                  <h5>You are not logged in !</h5>
-                  <p>Sorry, your access is refused due to security reasons of our server and also our sensitive data.<br/>Please go back to the previous page to continue browsing.</p>
-                  <a class="btn btn-info" href="javascript:history.back()">Go Back and Login</a>
-             </div>
-        </div>
-   </div>
+	<div style="width: 100%; display: flex; height: 100vh; justify-content: center; float: right; padding-top: 25%;">
+		<div class="row">
+			<div class="col-md-2 text-center">
+				<p><i class="fa fa-exclamation-triangle fa-5x" style="color:rgb(6, 35, 35)"></i><br />Status Code: 403
+				</p>
+			</div>
+			<div class="col-md-10">
+				<h3>OPPSSS!!!! Sorry...</h3>
+				<h5>You are not logged in !</h5>
+				<p>Sorry, your access is refused due to security reasons of our server and also our sensitive
+					data.<br />Please go back to the previous page to continue browsing.</p>
+				<a class="btn btn-info" href="javascript:history.back()">Go Back and Login</a>
+			</div>
+		</div>
+	</div>
 </div>
 
-<div class="container-fluid p-4 m-4" [hidden]="!isloggedin"> 
-    <p>You are logged in as Doctor</p>
-    <button (click)="logout()" class="badge badge-info">Logout</button>
-    <hr class="dotted">
-    <br>
-    <div class="row" *ngFor="let pat of list">
-        <!-- <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="card-link">Card link</a>
-                        <a href="#" class="card-link">Another link</a>
-                    </div>
-                </div> -->
-        
-        <div class="col-6 col-md-6 col-lg-4 mb-4 mb-lg-5 card p-3 ml-4 shadow bg-white rounded">
-                <div class="row px-3">
-                    <h3>{{pat.name}}</h3>
-                    <div class="px-4 mt-1">
-                        <span class="badge badge-secondary" >
-                            Contact : {{pat.contact}}
-                        </span>
-                    </div>
-                </div>
-                <div class="row px-3">
-                    <span class="badge badge-info" [hidden]="pat.gender !== 'Male'">
-                        {{pat.gender}}
-                    </span>
-                    <span class="badge badge-warning" [hidden]="pat.gender === 'Male'">
-                        {{pat.gender}}
-                    </span>
-                    <div class="px-2"></div>
-                    <span class="badge badge-secondary" >
-                        Age : {{pat.age}}
-                    </span>
-                </div>
-                <hr class="dotted">
-                <p>Symptoms : {{ pat.symptoms}}</p>
-                <div class="row px-3">
-                    <button class="badge badge-success px-4" [hidden]="pat.answered === 'false'" (click)="createPrescription(pat)">
-                        Answered 
-                    </button>
-                    <button class="badge badge-danger px-4" [hidden]="pat.answered !== 'false'" (click)="createPrescription(pat)">
-                        Not Answered
-                    </button>
-                </div>
-                <div class="row  px-4 mx-2">
-                   
-    
-                    <!-- <button (click)="createPrescription(pat)" class="badge badge-info">Answer</button> -->
-                </div>
-                
-        </div>
-    <div>
-</div>
-
-
-
-
-
-
-
-
-    
+<!-- Displaying the content -->
+<!-- <div class="container-fluid p-4 m-4" [hidden]="!isloggedin">
+	<div class="row" *ngFor="let pat of list">
+		<div class="col-6 col-md-6 col-lg-4 mb-4 mb-lg-5 card p-3 ml-4 shadow bg-white rounded">
+			<div class="row px-3">
+				<h3>{{pat.name}}</h3>
+				<div class="px-4 mt-1">
+					<span class="badge badge-secondary">
+						Contact : {{pat.contact}}
+					</span>
+				</div>
+			</div>
+			<div class="row px-3">
+				<span class="badge badge-info" [hidden]="pat.gender !== 'Male'">
+					{{pat.gender}}
+				</span>
+				<span class="badge badge-warning" [hidden]="pat.gender === 'Male'">
+					{{pat.gender}}
+				</span>
+				<div class="px-2"></div>
+				<span class="badge badge-secondary">
+					Age : {{pat.age}}
+				</span>
+			</div>
+			<hr class="dotted">
+			<p>Symptoms : {{ pat.symptoms}}</p>
+			<div class="row px-3">
+				<button class="badge badge-success px-4" [hidden]="pat.answered === 'false'"
+					(click)="createPrescription(pat)">
+					Answered
+				</button>
+				<button class="badge badge-danger px-4" [hidden]="pat.answered !== 'false'"
+					(click)="createPrescription(pat)">
+					Not Answered
+				</button>
+			</div>
+		</div>
+	</div>
+</div> -->

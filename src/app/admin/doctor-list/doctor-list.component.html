@@ -1,4 +1,4 @@
-<table class="table table-hover">
+<!-- <table class="table table-hover">
     <thead>
       <th>Name</th>
       <th>Email</th>
@@ -24,4 +24,45 @@
       </tr>
     </tbody>
   </table>
+ -->
+<h3 class="mb-4">List of Doctors</h3>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="content">
+	<div class="container">
+		<div class="row" *ngFor="let doc of list">
+			<div class="col-lg-4 card shadow border border-info" id="tabs">
+				<div class="text-center card-box">
+					<div class="member-card pt-2">
+						<div class="thumb-lg member-thumb mx-auto"><img src="{{doc.profilepic}}"
+								class="rounded-circle img-thumbnail shadow" alt="profile-image" (click)="onEdit(doc)"></div>
+						<h4 class="pt-3" style="font-weight: 800; font-size:22px;" (click)="onEdit(doc)">{{doc.name}}</h4>
+						<h4 class="pt-1" style="font-weight: 500;" (click)="onEdit(doc)">{{doc.type}}</h4>
+						<h4 class="pt-2 text-muted"  (click)="onEdit(doc)">{{doc.address}}</h4>
+						<div class="">
+							<p class="text-muted">Email <span>| </span><span><a href="mailto: {{doc.email}}"
+										class="text-pink">{{doc.email}}</a></span></p>
+						</div>
+						<div (click)="onEdit(doc)">
+							<a title="" data-placement="top" data-toggle="tooltip" class="tooltips"
+								data-original-title="Facebook"><i class="fa fa-phone"></i> | {{doc.contact}}</a>
+						</div>
+						<div class="row">
+							<button type="button"
+							class="btn btn-primary mt-3 ml-3 btn-rounded waves-effect w-md waves-light col-md-5" (click)="gotoProfile(doc)">Profile
+							</button>
+						<button type="button"
+							class="btn btn-danger mt-3 ml-3 btn-rounded waves-effect w-md waves-light col-md-5" (click)="onDelete(doc.id)">Delete</button>
+						</div>
+					</div>
+				</div>
+			</div>
 
+		</div>
+	</div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
