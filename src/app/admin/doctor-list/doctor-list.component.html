@@ -36,7 +36,7 @@
 						<div class="thumb-lg member-thumb mx-auto"><img src="{{doc.profilepic}}"
 								class="rounded-circle img-thumbnail shadow" alt="profile-image" (click)="onEdit(doc)"></div>
 						<h4 class="pt-3" style="font-weight: 800; font-size:22px;" (click)="onEdit(doc)">{{doc.name}}</h4>
-						<h4 class="pt-1" style="font-weight: 500;" (click)="onEdit(doc)">{{doc.type}}</h4>
+						<h4 class="pt-1" style="font-weight: 500;" (click)="onEdit(doc)">{{doc.type.toUpperCase()}}</h4>
 						<h4 class="pt-2 text-muted"  (click)="onEdit(doc)">{{doc.address}}</h4>
 						<div class="">
 							<p class="text-muted">Email <span>| </span><span><a href="mailto: {{doc.email}}"

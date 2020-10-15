@@ -11,6 +11,7 @@ export class ProfileComponent implements OnInit {
 	user: Doctor;
 	address = [];
 	qualification = [];
+	
 	constructor(private route: ActivatedRoute, private router: Router, public firebaseService: FirebaseService) {
 		if (localStorage.getItem('user') === null && localStorage.getItem('admin') === 'false') {
 			this.router.navigate([ '/login' ]);

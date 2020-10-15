@@ -42,7 +42,7 @@ export class RegisterComponent implements OnInit {
 			qualification: '',
 			type: '',
 			profilepic: '',
-			signature: '',
+			signature: ''
 		};
 	}
 
@@ -51,9 +51,19 @@ export class RegisterComponent implements OnInit {
 		console.log(this.profileFilePath['name']);
 	}
 
+	_handleReaderLoaded(e) {
+		console.log('_handleReaderLoaded');
+		var reader = e.target;
+		console.log(reader.result.split(/,(.+)/)[1]);
+		this.signFilePath = reader.result.split(/,(.+)/)[1];
+	}
+
 	setSignatureImage(event) {
 		this.signFilePath = event.target.files[0];
 		console.log(this.signFilePath['name']);
+		var reader = new FileReader();
+		reader.onload = this._handleReaderLoaded.bind(this);
+		reader.readAsDataURL(event.target.files[0]);
 	}
 
 	async registerDoctor(form: NgForm) {
@@ -75,33 +85,17 @@ export class RegisterComponent implements OnInit {
 						fileRef.getDownloadURL().subscribe((profileurl) => {
 							console.log(profileurl);
 
-							var filePath = `Signatures/${this.signFilePath['name']
-								.split('.')
-								.slice(0, -1)
-								.join('.')}_${new Date().getTime()}`;
-							const fileRef = this.storage.ref(filePath);
-							this.storage
-								.upload(filePath, this.signFilePath)
-								.snapshotChanges()
-								.pipe(
-									finalize(() => {
-										fileRef.getDownloadURL().subscribe((signurl) => {
-											console.log(signurl);
-											let data = Object.assign({}, form.value);
-											delete data.id;	
-											data['profilepic'] = profileurl;
-											data['signature'] = signurl;
-											console.log(data);
-											console.log(form.value.id == null);
+							let data = Object.assign({}, form.value);
+							delete data.id;
+							data['profilepic'] = profileurl;
+							data['signature'] = "data:image/jpg;base64,"+this.signFilePath;
+							console.log(data);
+							console.log(form.value.id == null);
 
-											this.firestore.collection('doctors').doc(result.user.uid).set(data);
-											this.fireservice.loading = false;
-											this.resetForm(form);
-											this.toastr.success('', 'Registered a Doctor successfully');
-										});
-									})
-								)
-								.subscribe();
+							this.firestore.collection('doctors').doc(result.user.uid).set(data);
+							this.fireservice.loading = false;
+							this.resetForm(form);
+							this.toastr.success('', 'Registered a Doctor successfully');
 						});
 					})
 				)

@@ -1,0 +1,54 @@
+body {
+	font-family: 'Rubik', sans-serif;
+	height: 100% !important;
+	background-color: #3f51b5 !important;
+}
+
+#tabs:hover {
+	cursor: pointer;
+	color: #5bc0de;
+}
+
+#ta:hover {
+	cursor: pointer;
+}
+
+.more {
+	opacity: 0.5 !important;
+}
+
+#plus {
+	opacity: 0.8;
+}
+
+.card {
+	/* border-radius: 0px !important; */
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+
+a:hover:not(#tabs):not(#title) {
+	background-color: #ccc !important;
+}
+
+.btn-outlined:active {
+	color: #fff;
+	border-color: #fff !important;
+}
+
+img {
+	cursor: pointer;
+	overflow: visible;
+}
+
+.btn:focus,
+.btn:active {
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+.container {
+	margin-top: 50px !important;
+}

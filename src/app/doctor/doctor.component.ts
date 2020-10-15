@@ -133,4 +133,5 @@ export class DoctorComponent implements OnInit {
 	gotoProfile(): void {
 		this.router.navigateByUrl('/profile', { state: { user : JSON.parse(localStorage.getItem('user')) } });
 	}
+
 }
