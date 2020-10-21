@@ -28,10 +28,10 @@
 <h3 class="mb-4">List of Doctors</h3>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <div class="content">
-	<div class="container">
-		<div class="row" *ngFor="let doc of list">
-			<div class="col-lg-4 card shadow border border-info" id="tabs">
-				<div class="text-center card-box">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-lg-4 px-2" id="tabs"  *ngFor="let doc of list">
+				<div class="text-center card-box  card shadow border border-info">
 					<div class="member-card pt-2">
 						<div class="thumb-lg member-thumb mx-auto"><img src="{{doc.profilepic}}"
 								class="rounded-circle img-thumbnail shadow" alt="profile-image" (click)="onEdit(doc)"></div>
@@ -56,7 +56,7 @@
 					</div>
 				</div>
 			</div>
-
+			
 		</div>
 	</div>
 </div>

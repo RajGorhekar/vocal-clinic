@@ -28,189 +28,176 @@
     }
 </style>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-md navbar-light bg-info fixed-top">
-    <a class="navbar-brand text-white"><img src="../././assets/icon.png" height="30px" width="30px"
-            style="border-radius: 5px;"> Vocal Clinic</a>
-    <button type="button" class="navbar-toggler bg-light" data-toggle="collapse" data-target="#nav">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-between" id="nav">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
+<div [hidden]="messagedAndDeleted">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-light bg-info fixed-top">
+        <a class="navbar-brand text-white"><img src="../././assets/icon.png" height="30px" width="30px"
+                style="border-radius: 5px;"> Vocal Clinic</a>
+        <button type="button" class="navbar-toggler bg-light" data-toggle="collapse" data-target="#nav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-between" id="nav">
+            <ul class="navbar-nav ml-auto">
+                <!-- <li class="nav-item">
                 <a class="nav-link text-light font-weight-bold px-3" (click)="gotoProfile()" id="tabs">Profile</a>
-            </li>
-            <!-- <li class="nav-item">
-                <a class="nav-link text-light font-weight-bold px-3" type="submit"
-                    (click)='editPrescription(presInput.value,doctor.name)' id="tabs">Save</a>
             </li> -->
             <li class="nav-item">
-                <a class="nav-link text-light font-weight-bold px-3" type="submit" (click)="voiceSearch()"
-                    id="mybtn">{{this.valueForButton}}</a>
+                <a class="nav-link text-light font-weight-bold px-3" type="submit" (click)="gotoHistory(patientInfo.contact)"
+                    id="tabs">History</a>
             </li>
-            <li class="nav-item" [hidden]="hid">
-                <a class="nav-link text-light font-weight-bold px-3" (click)="generatePDF()" id="tabs">send</a>
-            </li>
-            <li class="nav-item" [hidden]="!hid">
-                <a class="nav-link text-light font-weight-bold px-3" id="tabs">sending</a>
-            </li>
-        </ul>
-    </div>
-</nav>
-<!-- <br>
+            <li class="nav-item">
+                    <a class="nav-link text-light font-weight-bold px-3" type="submit"
+                        (click)='editPrescription(presInput.value,doctor.name,"Updated a Patient successfully")'
+                        id="tabs">Save</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light font-weight-bold px-3" type="submit" (click)="voiceSearch()"
+                        id="mybtn">{{this.valueForButton}}</a>
+                </li>
+                <li class="nav-item" [hidden]="hid">
+                    <a class="nav-link text-light font-weight-bold px-3"
+                        (click)="generatePDF(presInput.value,doctor.name,'Updated a Patient successfully,\nWaiting to send it to User')"
+                        id="tabs">send</a>
+                </li>
+                <li class="nav-item" [hidden]="!hid">
+                    <a class="nav-link text-light font-weight-bold px-3" id="tabs">sending</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- <br>
 <br>
 <br> -->
 
-<div class="container" style="left: 0; right: 0; margin-left: auto; margin-right: auto; max-width: 800px;margin-top:75px;">
-    <img id="template" src=".././assets/template.png">
     <div class="container"
-        style="min-width: 650px; width: 650px; position: absolute; top: 32%; left: 0; right: 0; bottom: 0;">
-        <table class="table table-hover">
-            <thead>
-                <th>Name</th>
-                <th>Gender</th>
-                <th>Age</th>
-                <th>Mobile No</th>
-            </thead>
-            <tbody>
-                <tr>
-                    <td style="font-size: small;">{{patientInfo.name}}</td>
-                    <td style="font-size: small;">{{patientInfo.gender}}</td>
-                    <td style="font-size: small;">{{patientInfo.age}}</td>
-                    <td style="font-size: small;">{{patientInfo.contact}}</td>
-                </tr>
-            </tbody>
-        </table>
-        <span>
-            <h6 style="font-size: small; text-align: justify;"><b>Symptoms :</b> {{patientInfo.symptoms}}</h6>
-        </span>
+        style="left: 0; right: 0; margin-left: auto; margin-right: auto; max-width: 800px;margin-top:75px;">
+        <img id="template" src=".././assets/template.png">
+        <div class="container"
+            style="min-width: 650px; width: 650px; position: absolute; top: 32%; left: 0; right: 0; bottom: 0;">
+            <table class="table table-hover">
+                <thead>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Age</th>
+                    <th>Mobile No</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-size: small;">{{personalData.name}}</td>
+                        <td style="font-size: small;">{{personalData.gender}}</td>
+                        <td style="font-size: small;">{{ calculate_age(personalData.dob) }}</td>
+                        <td style="font-size: small;">{{patientInfo.contact}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <span>
+                <h6 style="font-size: small; text-align: justify;"><b>Symptoms :</b> {{patientInfo.symptoms}}</h6>
+            </span>
 
-        <div class="form-group" style="height: auto;">
-            <label for="comment"><b style="font-size: small;">Prescription :</b></label>
-            <textarea class="form-control" rows="7" id="comment"
-                style="margin-top: 0px; margin-bottom: 0px; max-height: 220px;text-align: justify;"
-                #presInput>{{patientInfo.prescription}}</textarea>
-        </div>
-        <div>
-            <img src="{{doctor.signature}}" height="90">
-            <h3 style="font-weight: 900;">{{doctor.name}}</h3>
-            <h5 class="text-muted pl-1">{{doctor.type.toUpperCase()}}</h5>
-            <!-- <h4>{{doctor.type.toUpperCase()}} - <b><span style="font-weight: 900;">{{doctor.name}}</span></b></h4> -->
-        </div>
-    </div>
-
-</div>
-<div style="padding: 30rem;" [hidden]="!hid">
-
-</div>
-<table class="table table-bordered ml-5 mr-5" id="content" style="font-size: 1.5rem;" [hidden]="!hid">
-    <thead>
-    </thead>
-    <tbody>
-        <tr>
-            <td colspan="2"><img src=".././assets/template-head.png" height="120%"></td>
-        </tr>
-        <tr style="font-weight: bolder; text-align: center;">
-            <td>Field</td>
-            <td>Value</td>
-        </tr>
-        <tr>
-            <td>Name</td>
-            <td>{{patientInfo.name}}</td>
-        </tr>
-        <tr>
-            <td>contact</td>
-            <td>{{patientInfo.contact}}</td>
-        </tr>
-        <tr>
-            <td>Gender</td>
-            <td>{{patientInfo.gender}}</td>
-        </tr>
-        <tr>
-            <td>Age</td>
-            <td>{{patientInfo.age}}</td>
-        </tr>
-        <tr>
-            <td>Symptoms</td>
-            <td style="padding-right: 50px; text-align: justify;">{{patientInfo.symptoms}}</td>
-        </tr>
-        <tr>
-            <td>Prescription</td>
-            <td style="padding-right: 50px; text-align: justify;">{{patientInfo.prescription}}</td>
-        </tr>
-        <tr>
-            <td>Doctor Name</td>
-            <td>{{doctor.name}}</td>
-        </tr>
-        <tr>
-            <td>Doctor Type</td>
-            <td>{{doctor.type.toUpperCase()}}</td>
-        </tr>
-        <tr>
-            <td>Signature</td>
-            <td style="padding-left: 15x;"><img src="{{doctor.signature}}" height="140"></td>
-        </tr>
-        <tr>
-            <td colspan="2"><img src=".././assets/template-foot.png" height="120%"></td>
-        </tr>
-    </tbody>
-</table>
-
-
-<!-- <table class="table table-hover" id="content">
-    <thead>
-        <th></th>
-    </thead>
-    <tbody>
-        <tr>
-            <div class="container" style="left: 0; right: 0; margin-left: auto; margin-right: auto; max-width: 800px;">
-                <img id="template" src=".././assets/template.png">
-                <div class="container"
-                    style="min-width: 650px; width: 650px; position: absolute; top: 32%; left: 0; right: 0; bottom: 0;">
-                    <table class="table table-hover">
-                        <thead>
-                            <th>Name</th>
-                            <th>Gender</th>
-                            <th>Age</th>
-                            <th>Mobile No</th>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="font-size: small;">{{patientInfo.name}}</td>
-                                <td style="font-size: small;">{{patientInfo.gender}}</td>
-                                <td style="font-size: small;">{{patientInfo.age}}</td>
-                                <td style="font-size: small;">{{patientInfo.contact}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <span>
-                        <h6 style="font-size: small;"><b>Symptoms :</b> {{patientInfo.symptoms}}</h6>
-                    </span>
-            
-                    <div class="form-group" style="height: auto;">
-                        <label for="comment"><b style="font-size: small;">Prescription :</b></label>
-                        <textarea class="form-control" rows="15" id="comment"
-                            style="margin-top: 0px; margin-bottom: 0px; max-height: 220px;"
-                            #presInput>{{patientInfo.prescription}}</textarea>
-                    </div>
-                    <div>
-                        <img src="{{doctor.signature}}" height="90">
-                        <h4>{{doctor.type.toUpperCase()}} - <b><span style="font-weight: 900;">{{doctor.name}}</span></b></h4>
-                    </div>
-                </div>
-            
+            <div class="form-group" style="height: auto;">
+                <label for="comment"><b style="font-size: small;">Prescription :</b></label>
+                <textarea class="form-control" rows="7" id="comment"
+                    style="margin-top: 0px; margin-bottom: 0px; max-height: 220px;text-align: justify;"
+                    #presInput>{{patientInfo.prescription}}</textarea>
             </div>
-        </tr>
-    </tbody>
-</table> -->
+            <div>
+                <img src="{{doctor.signature}}" height="90">
+                <h3 style="font-weight: 900;">{{doctor.name}}</h3>
+                <h5 class="text-muted pl-1">{{doctor.type.toUpperCase()}}</h5>
+                <!-- <h4>{{doctor.type.toUpperCase()}} - <b><span style="font-weight: 900;">{{doctor.name}}</span></b></h4> -->
+            </div>
+        </div>
 
-<!-- <button class="btn btn-info" type="submit" (click) = 'editPrescription(presInput.value,doctor.name)' style="position: absolute; z-index: -1; bottom: 0; right:0; margin : 20px">Send</button>
-<button class="btn btn-success" type="submit" (click)="voiceSearch()"  id="mybtn" style="position: absolute; z-index: -1; bottom:50px; right:0; margin : 20px">{{this.valueForButton}}</button>  -->
-<!-- <button class="btn btn-warning" type="print" (click)="convetToPDF()"  id="mybtn" style="position: absolute; z-index: -1; bottom:100px; right:0; margin : 20px">pdf</button>  -->
-
-<form #gSearch method="GET" id="gSearch" action="https://www.google.com/search">
-    <div id="voicesearch" [hidden]="true">
-        <input #searchKey name="q" id="searchKey" type="hidden">
-        <div (click)="voiceSearch()" [hidden]="true"></div>
     </div>
-</form>
+    <div style="padding: 35rem;" [hidden]="!hid">
+
+    </div>
+    <table class="table table-bordered ml-5 mr-5" id="content" style="font-size: 1.5rem;" [hidden]="!hid">
+        <thead>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="2"><img src=".././assets/template-head.png" height="120%"></td>
+            </tr>
+            <tr style="font-weight: bolder; text-align: center;">
+                <td>Field</td>
+                <td>Value</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>{{personalData.name}}</td>
+            </tr>
+            <tr>
+                <td>contact No.</td>
+                <td>{{patientInfo.contact}}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>{{personalData.email}}</td>
+            </tr>
+            <tr>
+                <td>Gender</td>
+                <td>{{personalData.gender}}</td>
+            </tr>
+            <tr>
+                <td>Age</td>
+                <td>{{calculate_age(personalData.dob) }}</td>
+            </tr>
+            <tr>
+                <td>Symptoms</td>
+                <td style="padding-right: 50px; text-align: justify;">{{patientInfo.symptoms}}</td>
+            </tr>
+            <tr>
+                <td>Prescription</td>
+                <td style="padding-right: 50px; text-align: justify;">{{patientInfo.prescription}}</td>
+            </tr>
+            <tr>
+                <td>Doctor Name</td>
+                <td>{{doctor.name}}</td>
+            </tr>
+            <tr>
+                <td>Doctor Type</td>
+                <td>{{doctor.type.toUpperCase()}}</td>
+            </tr>
+            <tr>
+                <td>Signature</td>
+                <td style="padding-left: 15x;"><img src="{{doctor.signature}}" height="140"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><img src=".././assets/template-foot.png" height="120%"></td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <form #gSearch method="GET" id="gSearch" action="https://www.google.com/search">
+        <div id="voicesearch" [hidden]="true">
+            <input #searchKey name="q" id="searchKey" type="hidden">
+            <div (click)="voiceSearch()" [hidden]="true"></div>
+        </div>
+    </form>
+
+
+</div>
+
+
+<div [hidden]="!messagedAndDeleted">
+    <!-- 
+        The details of this patient are not available as there was an error in the registration process from his/her side.
+    -->
+    <div style="width: 100%; display: flex; height: 100vh; justify-content: center; float: right; padding-top: 25%;">
+        <div class="row">
+            <div class="col-md-2 text-center">
+                <p><i class="fa fa-exclamation-triangle fa-5x" style="color:rgb(6, 35, 35)"></i><br />Status Code:
+                    404</p>
+            </div>
+            <div class="col-md-10">
+                <h3>OOPS!!!! Sorry...</h3>
+                <h5>The details of this patient are not available!</h5>
+                <p>Sorry, There was an error in registration process from the patient's side.<br />Please go back to the
+                    previous page to continue.</p>
+                <a class="btn btn-info" href="javascript:history.back()">Go Back</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -27,6 +27,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { PatientDetailComponent } from './patient-detail/patient-detail.component';
 import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
+import { HistoryComponent } from './history/history.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { ProfileComponent } from './profile/profile.component';
     PatientDetailComponent,
     LoginComponent,
     ProfileComponent,
+    HistoryComponent,
   ],
   imports: [
     BrowserModule,

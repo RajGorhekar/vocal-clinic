@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
 	async verifyLogin(email: string, password: string) {
 		this.firebaseService.loading = true;
 		if (email == '') {
-			await this.firebaseService.signin('williamdaniel@gmail.com', 'Clinic@123');
+			await this.firebaseService.signin('raj.gorhekar@spit.ac.in', 'Clinic@123');
 		} else {
 			await this.firebaseService.signin(email, 'admin@123');
 		}

@@ -5,14 +5,21 @@
 export const environment = {
   production: false,
   firebaseConfig : {
-    apiKey: "AIzaSyAlIkKyd1BSwI5apBoHmn8U_TC8LhuAiA8",
-    authDomain: "vocal-clinic.firebaseapp.com",
-    databaseURL: "https://vocal-clinic.firebaseio.com",
-    projectId: "vocal-clinic",
-    storageBucket: "vocal-clinic.appspot.com",
-    messagingSenderId: "987277804287",
-    appId: "1:987277804287:web:c644541fbd829585bd42ca",
-    measurementId: "G-VSTMMTMD72"
+    // apiKey: "AIzaSyAlIkKyd1BSwI5apBoHmn8U_TC8LhuAiA8",
+    // authDomain: "vocal-clinic.firebaseapp.com",
+    // databaseURL: "https://vocal-clinic.firebaseio.com",
+    // projectId: "vocal-clinic",
+    // storageBucket: "vocal-clinic.appspot.com",
+    // messagingSenderId: "987277804287",
+    // appId: "1:987277804287:web:c644541fbd829585bd42ca",
+    // measurementId: "G-VSTMMTMD72"
+    apiKey: "AIzaSyCRKNHRWlztJaDQp-amwYZT3n1hIPbAArw",
+    authDomain: "prjaffan.firebaseapp.com",
+    databaseURL: "https://prjaffan.firebaseio.com",
+    projectId: "prjaffan",
+    storageBucket: "prjaffan.appspot.com",
+    messagingSenderId: "1073295811869",
+    appId: "1:1073295811869:web:9cba88bbbae1dbaa3dedf4"
   }
 };
 

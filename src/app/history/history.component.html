@@ -1,0 +1,54 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-md navbar-light bg-info fixed-top">
+	<a href="#" id="title" class="navbar-brand text-white"><img src="../././assets/icon.png" height="30px" width="30px"
+			style="border-radius: 5px;"> Vocal Clinic</a>
+	<button type="button" class="navbar-toggler bg-light" data-toggle="collapse" data-target="#nav">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse justify-content-between" id="nav">
+		<ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link text-light font-weight-bold px-3" (click)="goBack()" id="tabs">Back</a>
+            </li>
+			<li class="nav-item">
+				<a class="nav-link text-light font-weight-bold px-3" (click)="gotoProfile()" id="tabs">Profile</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link text-light font-weight-bold px-3" (click)="logout()" id="tabs">Logout</a>
+			</li>
+		</ul>
+	</div>
+</nav>
+<br>
+<br>
+<br>
+
+<div class="container">
+	<div *ngFor="let pat of list">
+		<br>
+		<div class="card mt-2 border-5 active pb-0 px-2 shadow" (click)="createPrescription(pat)" id="ta">
+			<div class="row">
+				<div class=""
+					style="background-color: rgb(6, 174, 73); border-bottom-left-radius: 5px; border-top-left-radius: 5px; max-width: 6px; min-width: 6px;"></div>
+				<div class="col-md-8">
+					<!--  style="padding-left: 1%;" -->
+					<div class="pl-3 pt-4">
+						<!-- <div> -->
+							<h4 class="card-title"><b>Contact No. : </b>{{pat.contact}}</h4>
+							<span><b>Date : </b>{{ pat.date | date }}</span><br>
+							<span><b>Doctor Specialization : </b>{{ pat.type | titlecase }}</span>
+						<!-- </div> -->
+					</div>
+					<hr class="ml-3">
+					<div class="px-0 ml-3 pb-3" style="background: transparent;">
+						<b>Symptoms : </b><span class="text-muted" style="font-size:15px;">{{ (pat.symptoms.length>60) ? (pat.symptoms | slice:0:60)+'. . . . . . . . . . . . . . .':(pat.symptoms) }}</span>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		
+	</div>
+</div>
+<br>
+<br>

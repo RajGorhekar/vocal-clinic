@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AdminComponent } from './admin/admin.component';
 import { DoctorComponent } from './doctor/doctor.component';
+import { HistoryComponent } from './history/history.component';
 import { LoginComponent } from './login/login.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { PatientDetailComponent } from './patient-detail/patient-detail.component';
@@ -15,6 +16,7 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   { path: 'patients/:id', component: PatientDetailComponent },
+  { path: 'history/:id', component: HistoryComponent },
   { path: 'login', component: LoginComponent },
   { path: 'admin', component: AdminComponent },
   { path: 'doctor', component: DoctorComponent },

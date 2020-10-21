@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DoctorService } from 'src/app/shared/doctor.service';
 import { FirebaseService } from 'src/app/shared/firebase.service';
 import { NgForm } from '@angular/forms';
@@ -16,6 +16,9 @@ import { AngularFireAuth } from '@angular/fire/auth';
 export class RegisterComponent implements OnInit {
 	profileFilePath: String;
 	signFilePath: String;
+	@ViewChild('profilepicreal') profilepicreal: ElementRef;
+	@ViewChild('signature') signature: ElementRef;
+
 	DoctorType: ['pediatrician', 'Cardiologist', 'Psychiatrist', 'Neurologist', 'Ortopaedic surgeon', 'ENT specialist'];
 	constructor(
 		public service: DoctorService,
@@ -88,13 +91,15 @@ export class RegisterComponent implements OnInit {
 							let data = Object.assign({}, form.value);
 							delete data.id;
 							data['profilepic'] = profileurl;
-							data['signature'] = "data:image/jpg;base64,"+this.signFilePath;
+							data['signature'] = 'data:image/jpg;base64,' + this.signFilePath;
 							console.log(data);
 							console.log(form.value.id == null);
 
 							this.firestore.collection('doctors').doc(result.user.uid).set(data);
 							this.fireservice.loading = false;
 							this.resetForm(form);
+							this.profilepicreal.nativeElement.value = null;
+							this.signature.nativeElement.value = null;
 							this.toastr.success('', 'Registered a Doctor successfully');
 						});
 					})

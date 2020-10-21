@@ -10,6 +10,8 @@ declare var webkitSpeechRecognition: any;
 
 import { FirebaseService } from '../shared/firebase.service';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { finalize } from 'rxjs/operators';
 
 import { PatientService } from '../shared/Patient.service';
 import { ToastrService } from 'ngx-toastr';
@@ -37,6 +39,8 @@ export class PatientDetailComponent implements OnInit {
 	public doctor: any;
 	public valueForButton = 'Use Voice';
 	public hid = false;
+	public personalData: any;
+	public messagedAndDeleted = false;
 
 	@ViewChild('gSearch') formSearch;
 	@ViewChild('searchKey') hiddenSearchHandler;
@@ -46,6 +50,7 @@ export class PatientDetailComponent implements OnInit {
 		private firestore: AngularFirestore,
 		public service: PatientService,
 		public fs: FirebaseService,
+		private storage: AngularFireStorage,
 		private toastr: ToastrService,
 		private router: Router,
 		private injector: Injector,
@@ -73,12 +78,33 @@ export class PatientDetailComponent implements OnInit {
 				.then((doc) => {
 					this.patientInfo = doc.data();
 					console.log(this.patientInfo);
-					this.fs.loading = false;
+					this.firestore
+						.collection('patients')
+						.ref.doc(this.patientInfo.contact)
+						.get()
+						.then((doc) => {
+							if (doc.exists) {
+								this.personalData = doc.data();
+								console.log('Document data:', this.personalData);
+								this.fs.loading = false;
+							} else {
+								//edge case handling
+								this.messagedAndDeleted = true;
+								this.messageAndDelete(this.patientId);
+								console.log('No such document!');
+								this.fs.loading = false;
+							}
+						})
+						.catch((err) => {
+							console.log(err);
+							this.fs.loading = false;
+						});
 				})
 				.catch((err) => {
 					console.log(err);
 					this.fs.loading = false;
 				});
+
 			this.signDocument();
 		}
 	}
@@ -88,20 +114,48 @@ export class PatientDetailComponent implements OnInit {
 		console.log(this.doctor);
 	};
 
-	editPrescription = (title: string, doctorname: string) => {
-		this.fs.loading = true;
-		// console.log(title);
+	messageAndDelete = (id) => {
 		this.firestore
-			.doc('patient-data/' + this.patientId)
-			.update({ prescription: title, doctor: doctorname, answered: 'true' });
-		this.fs.loading = false;
-		// this.generatePDF();
-		this.toastr.success('', 'Updated a Patient successfully');
-		// this.router.navigate([ '/doctor' ]);
+			.collection('patients')
+			.ref.doc(this.patientInfo.contact)
+			.get()
+			.then((doc) => {
+				if (doc.exists) {
+					this.sendPDF(null);
+					doc.ref.delete;
+					console.log('Document deleted');
+				} else {
+					console.log('No such document!');
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	};
 
+	editPrescription = (title: string, doctorname: string, message: string) => {
+		if (title.length < 20) {
+			this.toastr.error('', 'Prescription too Short\nMinimum 20 characters Required');
+		} else {
+			this.fs.loading = true;
+			this.firestore
+				.doc('patient-data/' + this.patientId)
+				.update({ prescription: title, doctor: doctorname, answered: 'true' });
+			this.fs.loading = false;
+			// this.generatePDF();
+			this.toastr.success('', message);
+			// this.sendPDF(null);
+		}
+	};
+
+	calculate_age(dob) {
+		var diff_ms = Date.now() - dob;
+		var age_dt = new Date(diff_ms);
+
+		return Math.abs(age_dt.getUTCFullYear() - 1970);
+	}
+
 	public voiceSearch = () => {
-		console.log('object');
 		if ('webkitSpeechRecognition' in window) {
 			const vSearch = new webkitSpeechRecognition();
 			vSearch.continuous = false;
@@ -136,69 +190,136 @@ export class PatientDetailComponent implements OnInit {
 		return new Promise((resolve) => setTimeout(resolve, ms));
 	}
 
-	async generatePDF() {
-		var time = Date().replace('GMT+0530 (India Standard Time)', '').trim().replace(/\s/g, '_');
-		console.log(time);
-		this.hid = true;
-		console.log(this.hid);
-		await this.delay(1);
-		var data = document.getElementById('content');
-		html2canvas(data).then((canvas) => {
-			console.log(canvas);
-			// Few necessary setting options
-			var imgHeight = canvas.height * 208 / canvas.width;
-			const contentDataURL = canvas.toDataURL('image/png');
+	async generatePDF(title: string, doctorname: string, message: string) {
+		if (title.length < 20) {
+			this.toastr.error('', 'Prescription too Short');
+		} else {
+			await this.editPrescription(title, doctorname, message);
+			var time = Date().replace('GMT+0530 (India Standard Time)', '').trim().replace(/\s/g, '_');
+			console.log(time);
+			this.hid = true;
+			await this.delay(1);
+			var data = document.getElementById('content');
+			html2canvas(data).then((canvas) => {
+				console.log(canvas);
+				// Few necessary setting options
+				var imgHeight = canvas.height * 208 / canvas.width;
+				const contentDataURL = canvas.toDataURL('image/png');
 
-			// to save as Image
-			// var a = document.createElement('a');
-			// a.href = canvas.toDataURL('image/jpeg').replace('image/jpeg', 'image/octet-stream');
-			// a.download = 'somefilename.jpg';
-			// a.click();
+				// to save as Image
+				// var a = document.createElement('a');
+				// a.href = canvas.toDataURL('image/jpeg').replace('image/jpeg', 'image/octet-stream');
+				// a.download = 'somefilename.jpg';
+				// a.click();
 
+				// to save as Pdf
+				let pdf = new jsPDF('p', 'mm', 'a4', true); // A4 size page of PDF
+				pdf.addImage(contentDataURL, 0, 0, 208, imgHeight);
 
-			//to save as Pdf
-			// let pdf = new jsPDF('p', 'mm', 'a4'); // A4 size page of PDF
-			// pdf.addImage(contentDataURL, 0, 0, 208, imgHeight);
-			// pdf.save('prescription_' + time + '.pdf'); // Generated PDF
+				const file = pdf.output('blob');
 
-			this.hid = false;
-		});
+				const filePath = Date.now().toString();
+				const fileRef = this.storage.ref('/Prescription/' + filePath + '.pdf');
+				const task = this.storage.upload('/Prescription/' + filePath + '.pdf', file);
+				task
+					.snapshotChanges()
+					.pipe(
+						finalize(async () => {
+							fileRef.getDownloadURL().subscribe((url) => {
+								this.sendPDF(url).then(async () => {
+									this.toastr.success(
+										'',
+										'Prescription sucessfully sent to ' + this.patientInfo.name
+									);
+									// await this.delay(1000);
+
+									this.hid = false;
+									await this.storage.storage
+										.refFromURL(url)
+										.delete()
+										.then(function() {
+											console.log('File deleted successfully');
+										})
+										.catch(function(error) {
+											console.log('There was some error deleting the file');
+										});
+								});
+							});
+						})
+					)
+					.subscribe();
+			});
+		}
 	}
 
 	gotoProfile(): void {
 		this.router.navigateByUrl('/profile', { state: { user: JSON.parse(localStorage.getItem('user')) } });
 	}
 
-	sendPDF = () => {
+	gotoHistory = (num) =>{
+		this.router.navigate([ '/history',num]);
+	}
+
+	sendPDF = async (url) => {
 		// const twilio = require('twilio');
-		const client = twilio('AC33fe860af7a379c7376ea66b03a0c511', '73ace3dba7c201e0182c2ebe4e5d5b53');
-		client.messages
-			.create({
-				from: 'whatsapp:+14155238886',
-				to: 'whatsapp:+918446417445',
-				body: 'We have got a Prescription for You',
-				// mediaUrl: "https://images.unsplash.com/photo-1602676081572-80c8f64defe5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1910&q=80"
-				mediaUrl:
-					'https://firebasestorage.googleapis.com/v0/b/vocal-clinic.appspot.com/o/Prescriptions%2Fprescription_Wed_Oct_14_2020_23_58_01.pdf?alt=media&token=53734259-8985-4b4f-a6a6-1ab2589e905f'
-			})
-			.then((message) => {
-				console.log(message.sid);
-			})
-			.catch((err) => {
-				console.error(err);
-			});
-		client.messages
-			.create({
-				from: 'whatsapp:+14155238886',
-				to: 'whatsapp:+918446417445',
-				body:
-					'We have got a Prescription for You : https://firebasestorage.googleapis.com/v0/b/vocal-clinic.appspot.com/o/Prescriptions%2Fprescription_Wed_Oct_14_2020_23_58_01.pdf?alt=media&token=53734259-8985-4b4f-a6a6-1ab2589e905f'
-			})
-			.then((message) => {
-				console.log(message.sid);
-			})
-			.catch((err) => {
-				console.error(err);
-			});
+		// const client = twilio('AC33fe860af7a379c7376ea66b03a0c511', '73ace3dba7c201e0182c2ebe4e5d5b53');
+		var sendTo = 'whatsapp:';
+		let no = this.patientInfo.number;
+		console.log(no);
+		if (this.patientInfo.contact.length < 10) {
+			window.alert('Invalid contact number detected!');
+		} else {
+			sendTo += '+91' + this.patientInfo.contact.substring(this.patientInfo.contact.length - 10);
+		}
+
+		console.log(sendTo);
+
+		const client = twilio('AC90dc856cb90b7b1341b332ee04723879', '2bd8d5d04394c5ae86bc0bd4c81199b4');
+
+		if (url == null) {
+			await client.messages
+				.create({
+					from: 'whatsapp:+14155238886',
+					to: sendTo,
+					body:
+						'This is *Dr. ' +
+						this.doctor.name +
+						'* from Vocal Clinic. We are unable to get your details. Please provide all the necessary details to the automated chatbot!'
+				})
+				.then((message) => {
+					console.log(message.sid);
+				})
+				.catch((err) => {
+					console.error(err);
+				});
+		} else {
+			await client.messages
+				.create({
+					// from: 'whatsapp:+14155238886',
+					from: 'whatsapp:+14155238886',
+					to: sendTo,
+					body: 'This is *Dr. ' + this.doctor.name + "* . Here's your prescription. Take care"
+				})
+				.then((message) => {
+					console.log(message.sid);
+				})
+				.catch((err) => {
+					console.error(err);
+				});
+			await client.messages
+				.create({
+					from: 'whatsapp:+14155238886',
+					to: sendTo,
+					body: 'Prescription_for_' + this.personalData.name.replace(" ","_"), //showing as undefined in watsapp solve this
+					mediaUrl: url
+					// 'https://firebasestorage.googleapis.com/v0/b/vocal-clinic.appspot.com/o/Prescriptions%2Fprescription_Fri_Oct_16_2020_12_13_17.pdf?alt=media&token=a1fcd057-9ca6-4512-b1c9-6cd20d553014'
+				})
+				.then((message) => {
+					console.log(message.sid);
+				})
+				.catch((err) => {
+					console.error(err);
+				});
+		}
 	};
 }

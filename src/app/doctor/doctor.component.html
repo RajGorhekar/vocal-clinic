@@ -96,6 +96,7 @@
 
 <div class="container">
 	<div *ngFor="let pat of list">
+		<br>
 		<div class="card mt-2 border-5 active pb-0 px-2 shadow" (click)="createPrescription(pat)" id="ta">
 			<div class="row">
 				<div class=""
@@ -107,16 +108,11 @@
 				<div class="col-md-8">
 					<!--  style="padding-left: 1%;" -->
 					<div class="pl-3 pt-4">
-						<div>
-							<h4 class="card-title"><b>{{pat.name}}</b><span class="text-muted" style="font-size:15px;">
-									( {{pat.gender}}, {{pat.age}} )</span> </h4>
-						</div>
-						<h6 class="card-subtitle mb-2 text-muted">
-							<p><b>Email: </b>{{pat.email}}</p>
-						</h6>
-						<h6 class="card-subtitle text-muted">
-							<p><b>Contact: </b>{{pat.contact}}</p>
-						</h6>
+						<!-- <div> -->
+							<h4 class="card-title"><b>Contact No. : </b>{{pat.contact}}</h4>
+							<span><b>Date : </b>{{ pat.date | date }}</span><br>
+							<span><b>Doctor Specialization : </b>{{ pat.type | titlecase }}</span>
+						<!-- </div> -->
 					</div>
 					<hr class="ml-3">
 					<div class="px-0 ml-3 pb-3" style="background: transparent;">
