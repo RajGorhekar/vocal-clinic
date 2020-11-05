@@ -18,6 +18,7 @@ export class DoctorComponent implements OnInit {
 	list: Patient[];
 	public isloggedin: boolean = false;
 	index: number = 0;
+	isadmin = false;
 	constructor(
 		public service: PatientService,
 		public firebaseService: FirebaseService,
@@ -27,7 +28,7 @@ export class DoctorComponent implements OnInit {
 		private route: ActivatedRoute
 	) {}
 
-	setList = (x : Patient[]) => {
+	setList = (x: Patient[]) => {
 		this.list = x;
 	};
 
@@ -41,8 +42,9 @@ export class DoctorComponent implements OnInit {
 				let templist = [];
 
 				if (localStorage.getItem('admin') === 'true') {
+					this.isadmin = true;
 					for (let item in actionArray) {
-						if (actionArray[item].payload.doc.data()['answered'] === "false") {
+						if (actionArray[item].payload.doc.data()['answered'] === 'false') {
 							templist.push({
 								id: actionArray[item].payload.doc.id,
 								...actionArray[item].payload.doc.data() as {}
@@ -50,11 +52,14 @@ export class DoctorComponent implements OnInit {
 						}
 					}
 				} else {
-					let doctorType = JSON.parse(loggedInUser)['type'];
+					let doctorType = JSON.parse(loggedInUser)['type'].toLowerCase().replace(/\s/g, "");
 					for (let item in actionArray) {
-						let patientRequires = actionArray[item].payload.doc.data()['type'];
+						let patientRequires = actionArray[item].payload.doc.data()['type'].toLowerCase().replace(/\s/g, "");
 						// patientRequires == doctorType
-						if (patientRequires == doctorType && actionArray[item].payload.doc.data()['answered'] === "false") {
+						if (
+							patientRequires == doctorType &&
+							actionArray[item].payload.doc.data()['answered'] === 'false'
+						) {
 							templist.push({
 								id: actionArray[item].payload.doc.id,
 								...actionArray[item].payload.doc.data() as {}
@@ -84,17 +89,17 @@ export class DoctorComponent implements OnInit {
 		}
 	}
 
-	toggleTab = (x : number) => {
-		this.index = x
+	toggleTab = (x: number) => {
+		this.index = x;
 		this.service.viewPatients().subscribe((actionArray) => {
 			let templist = [];
 			for (let item in actionArray) {
-				let patientRequires = actionArray[item].payload.doc.data()['type'];
-				let fetchfor = ""
-				if(x == 0){
-					fetchfor = "false"
-				} else{
-					fetchfor = "true"
+				let patientRequires = actionArray[item].payload.doc.data()['type'].toLowerCase().replace(/\s/g, "");
+				let fetchfor = '';
+				if (x == 0) {
+					fetchfor = 'false';
+				} else {
+					fetchfor = 'true';
 				}
 				if (localStorage.getItem('admin') === 'true') {
 					if (actionArray[item].payload.doc.data()['answered'] === fetchfor) {
@@ -103,27 +108,28 @@ export class DoctorComponent implements OnInit {
 							...actionArray[item].payload.doc.data() as {}
 						} as Patient);
 					}
-				}else{
-					let doctorType = JSON.parse(localStorage.getItem('user'))['type'];
-					if (patientRequires == doctorType && actionArray[item].payload.doc.data()['answered'] === fetchfor) {
+				} else {
+					let doctorType = JSON.parse(localStorage.getItem('user'))['type'].toLowerCase().replace(/\s/g, "");
+					if (
+						patientRequires == doctorType &&
+						actionArray[item].payload.doc.data()['answered'] === fetchfor
+					) {
 						templist.push({
 							id: actionArray[item].payload.doc.id,
 							...actionArray[item].payload.doc.data() as {}
 						} as Patient);
 					}
 				}
-
-				
 			}
 			this.setList(templist);
 		});
-	}
+	};
 
-	createPrescription(patient: Patient) : void {
+	createPrescription(patient: Patient): void {
 		this.router.navigate([ '/patients', patient.id ]);
 	}
 
-	logout() : void {
+	logout(): void {
 		this.firebaseService.logout();
 		this.firebaseService.logout();
 		localStorage.setItem('admin', 'false');
@@ -131,7 +137,6 @@ export class DoctorComponent implements OnInit {
 	}
 
 	gotoProfile(): void {
-		this.router.navigateByUrl('/profile', { state: { user : JSON.parse(localStorage.getItem('user')) } });
+		this.router.navigateByUrl('/profile', { state: { user: JSON.parse(localStorage.getItem('user')) } });
 	}
-
 }

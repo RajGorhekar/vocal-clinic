@@ -31,43 +31,35 @@
 <div [hidden]="messagedAndDeleted">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-md navbar-light bg-info fixed-top">
-        <a class="navbar-brand text-white"><img src="../././assets/icon.png" height="30px" width="30px"
-                style="border-radius: 5px;"> Vocal Clinic</a>
+        <a href="http://localhost:4200/doctor" class="navbar-brand text-white"><img src="../././assets/icon.png"
+                height="30px" width="30px" style="border-radius: 5px;"> Vocal Clinic</a>
         <button type="button" class="navbar-toggler bg-light" data-toggle="collapse" data-target="#nav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-between" id="nav">
             <ul class="navbar-nav ml-auto">
-                <!-- <li class="nav-item">
-                <a class="nav-link text-light font-weight-bold px-3" (click)="gotoProfile()" id="tabs">Profile</a>
-            </li> -->
-            <li class="nav-item">
-                <a class="nav-link text-light font-weight-bold px-3" type="submit" (click)="gotoHistory(patientInfo.contact)"
-                    id="tabs">History</a>
-            </li>
-            <li class="nav-item">
+                <li class="nav-item" [hidden]="isadmin">
+                    <a class="nav-link text-light font-weight-bold px-3" type="submit"
+                        (click)="gotoHistory(patientInfo.contact)" id="tabs">History</a>
+                </li>
+                <li class="nav-item" [hidden]="isadmin">
                     <a class="nav-link text-light font-weight-bold px-3" type="submit"
                         (click)='editPrescription(presInput.value,doctor.name,"Updated a Patient successfully")'
                         id="tabs">Save</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" [hidden]="isadmin">
                     <a class="nav-link text-light font-weight-bold px-3" type="submit" (click)="voiceSearch()"
                         id="mybtn">{{this.valueForButton}}</a>
                 </li>
-                <li class="nav-item" [hidden]="hid">
+                <li class="nav-item" [hidden]="isadmin">
                     <a class="nav-link text-light font-weight-bold px-3"
                         (click)="generatePDF(presInput.value,doctor.name,'Updated a Patient successfully,\nWaiting to send it to User')"
-                        id="tabs">send</a>
-                </li>
-                <li class="nav-item" [hidden]="!hid">
-                    <a class="nav-link text-light font-weight-bold px-3" id="tabs">sending</a>
+                        id="tabs" [hidden]="hid">send</a>
+                    <a class="nav-link text-light font-weight-bold px-3" id="tabs" [hidden]="!hid">sending</a>
                 </li>
             </ul>
         </div>
     </nav>
-    <!-- <br>
-<br>
-<br> -->
 
     <div class="container"
         style="left: 0; right: 0; margin-left: auto; margin-right: auto; max-width: 800px;margin-top:75px;">
@@ -96,7 +88,8 @@
 
             <div class="form-group" style="height: auto;">
                 <label for="comment"><b style="font-size: small;">Prescription :</b></label>
-                <textarea class="form-control" rows="7" id="comment"
+                <textarea class="form-control" rows="7" id="comment" [readonly]="isadmin"
+                    placeholder="Enter Your Prescription here"
                     style="margin-top: 0px; margin-bottom: 0px; max-height: 220px;text-align: justify;"
                     #presInput>{{patientInfo.prescription}}</textarea>
             </div>
@@ -106,12 +99,18 @@
                 <h5 class="text-muted pl-1">{{doctor.type.toUpperCase()}}</h5>
                 <!-- <h4>{{doctor.type.toUpperCase()}} - <b><span style="font-weight: 900;">{{doctor.name}}</span></b></h4> -->
             </div>
+            <div [hidden]="!isadmin">
+                <h5>
+                    You are Logged in as :
+                </h5>
+                <h3>
+                    Admin
+                </h3>
+            </div>
         </div>
-
     </div>
-    <div style="padding: 35rem;" [hidden]="!hid">
 
-    </div>
+    <div style="padding: 35rem;" [hidden]="!hid"> </div>
     <table class="table table-bordered ml-5 mr-5" id="content" style="font-size: 1.5rem;" [hidden]="!hid">
         <thead>
         </thead>
@@ -128,7 +127,7 @@
                 <td>{{personalData.name}}</td>
             </tr>
             <tr>
-                <td>contact No.</td>
+                <td>Contact No.</td>
                 <td>{{patientInfo.contact}}</td>
             </tr>
             <tr>
@@ -149,7 +148,7 @@
             </tr>
             <tr>
                 <td>Prescription</td>
-                <td style="padding-right: 50px; text-align: justify;">{{patientInfo.prescription}}</td>
+                <td style="padding-right: 50px; text-align: justify;">{{presInput.value}}</td>
             </tr>
             <tr>
                 <td>Doctor Name</td>

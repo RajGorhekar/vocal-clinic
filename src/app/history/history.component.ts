@@ -11,7 +11,8 @@ import { Patient } from '../shared/patient.model';
 })
 export class HistoryComponent implements OnInit {
   contact = '';
-  list = []
+  list = [];
+  isadmin = false;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -23,6 +24,7 @@ export class HistoryComponent implements OnInit {
 			this.router.navigate([ '/login' ]);
 		}
 	}
+
 
 	ngOnInit(): void {
 		this.contact = this.route.snapshot.paramMap.get('id');

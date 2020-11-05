@@ -10,7 +10,7 @@ export class PatientService {
 	constructor(private firestore: AngularFirestore) {}
 
 	viewPatients() {
-		return this.firestore.collection('patient-data').snapshotChanges();
+		return this.firestore.collection('patient-data', (ref) => ref.orderBy('date', 'desc')).snapshotChanges();
 	}
 
 }

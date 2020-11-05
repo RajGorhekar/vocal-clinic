@@ -41,9 +41,12 @@ export class PatientDetailComponent implements OnInit {
 	public hid = false;
 	public personalData: any;
 	public messagedAndDeleted = false;
+	public isadmin = false;
 
 	@ViewChild('gSearch') formSearch;
 	@ViewChild('searchKey') hiddenSearchHandler;
+
+	@ViewChild('presInput', {static: true}) myInput: ElementRef;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -67,46 +70,48 @@ export class PatientDetailComponent implements OnInit {
 	ngOnInit() {
 		if (localStorage.getItem('user') === null) {
 			this.router.navigate([ '/login' ]);
-		} else {
-			this.fs.loading = true;
-			let id = this.route.snapshot.paramMap.get('id');
-			this.patientId = id;
-			this.firestore
-				.collection('patient-data')
-				.ref.doc(this.patientId)
-				.get()
-				.then((doc) => {
-					this.patientInfo = doc.data();
-					console.log(this.patientInfo);
-					this.firestore
-						.collection('patients')
-						.ref.doc(this.patientInfo.contact)
-						.get()
-						.then((doc) => {
-							if (doc.exists) {
-								this.personalData = doc.data();
-								console.log('Document data:', this.personalData);
-								this.fs.loading = false;
-							} else {
-								//edge case handling
-								this.messagedAndDeleted = true;
-								this.messageAndDelete(this.patientId);
-								console.log('No such document!');
-								this.fs.loading = false;
-							}
-						})
-						.catch((err) => {
-							console.log(err);
-							this.fs.loading = false;
-						});
-				})
-				.catch((err) => {
-					console.log(err);
-					this.fs.loading = false;
-				});
-
-			this.signDocument();
+		} else if (localStorage.getItem('admin') === 'true') {
+			this.isadmin = true;
+			console.log(this.isadmin);
 		}
+		this.fs.loading = true;
+		let id = this.route.snapshot.paramMap.get('id');
+		this.patientId = id;
+		this.firestore
+			.collection('patient-data')
+			.ref.doc(this.patientId)
+			.get()
+			.then((doc) => {
+				this.patientInfo = doc.data();
+				console.log(this.patientInfo);
+				this.firestore
+					.collection('patients')
+					.ref.doc(this.patientInfo.contact)
+					.get()
+					.then((doc) => {
+						if (doc.exists) {
+							this.personalData = doc.data();
+							console.log('Document data:', this.personalData);
+							this.fs.loading = false;
+						} else {
+							//edge case handling
+							this.messagedAndDeleted = true;
+							this.messageAndDelete(this.patientId);
+							console.log('No such document!');
+							this.fs.loading = false;
+						}
+					})
+					.catch((err) => {
+						console.log(err);
+						this.fs.loading = false;
+					});
+			})
+			.catch((err) => {
+				console.log(err);
+				this.fs.loading = false;
+			});
+
+		this.signDocument();
 	}
 
 	signDocument = () => {
@@ -116,13 +121,13 @@ export class PatientDetailComponent implements OnInit {
 
 	messageAndDelete = (id) => {
 		this.firestore
-			.collection('patients')
-			.ref.doc(this.patientInfo.contact)
+			.collection('patient-data')
+			.ref.doc(this.patientId)
 			.get()
 			.then((doc) => {
 				if (doc.exists) {
 					this.sendPDF(null);
-					doc.ref.delete;
+					// doc.ref.delete();
 					console.log('Document deleted');
 				} else {
 					console.log('No such document!');
@@ -148,11 +153,15 @@ export class PatientDetailComponent implements OnInit {
 		}
 	};
 
-	calculate_age(dob) {
-		var diff_ms = Date.now() - dob;
-		var age_dt = new Date(diff_ms);
-
-		return Math.abs(age_dt.getUTCFullYear() - 1970);
+	calculate_age(dateString: string) {
+		var today = new Date();
+		var birthDate = new Date(dateString.slice(0, 10));
+		var age = today.getFullYear() - birthDate.getFullYear();
+		var m = today.getMonth() - birthDate.getMonth();
+		if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+			age--;
+		}
+		return age;
 	}
 
 	public voiceSearch = () => {
@@ -198,7 +207,7 @@ export class PatientDetailComponent implements OnInit {
 			var time = Date().replace('GMT+0530 (India Standard Time)', '').trim().replace(/\s/g, '_');
 			console.log(time);
 			this.hid = true;
-			await this.delay(1);
+			await this.delay(1000);
 			var data = document.getElementById('content');
 			html2canvas(data).then((canvas) => {
 				console.log(canvas);
@@ -229,7 +238,7 @@ export class PatientDetailComponent implements OnInit {
 								this.sendPDF(url).then(async () => {
 									this.toastr.success(
 										'',
-										'Prescription sucessfully sent to ' + this.patientInfo.name
+										'Prescription sucessfully sent to ' + this.personalData.name
 									);
 									// await this.delay(1000);
 
@@ -256,13 +265,15 @@ export class PatientDetailComponent implements OnInit {
 		this.router.navigateByUrl('/profile', { state: { user: JSON.parse(localStorage.getItem('user')) } });
 	}
 
-	gotoHistory = (num) =>{
-		this.router.navigate([ '/history',num]);
-	}
+	gotoHistory = (num) => {
+		this.router.navigate([ '/history', num ]);
+	};
 
 	sendPDF = async (url) => {
 		// const twilio = require('twilio');
-		// const client = twilio('AC33fe860af7a379c7376ea66b03a0c511', '73ace3dba7c201e0182c2ebe4e5d5b53');
+		// const client = twilio('AC33fe860af7a379c7376ea66b03a0c511', '73ace3dba7c201e0182c2ebe4e5d5b53'); raj old
+		// const client = twilio('AC90dc856cb90b7b1341b332ee04723879', '2bd8d5d04394c5ae86bc0bd4c81199b4'); afan old
+		// const client = twilio('AC33fe860af7a379c7376ea66b03a0c511', '1f88e50fbed07d51124d3571b58aa5dc'); raj new 
 		var sendTo = 'whatsapp:';
 		let no = this.patientInfo.number;
 		console.log(no);
@@ -274,7 +285,7 @@ export class PatientDetailComponent implements OnInit {
 
 		console.log(sendTo);
 
-		const client = twilio('AC90dc856cb90b7b1341b332ee04723879', '2bd8d5d04394c5ae86bc0bd4c81199b4');
+		const client = twilio('AC90dc856cb90b7b1341b332ee04723879', '10e7becd629e9a5a1d4b6daf3a871dba');
 
 		if (url == null) {
 			await client.messages
@@ -284,7 +295,7 @@ export class PatientDetailComponent implements OnInit {
 					body:
 						'This is *Dr. ' +
 						this.doctor.name +
-						'* from Vocal Clinic. We are unable to get your details. Please provide all the necessary details to the automated chatbot!'
+						'* from Vocal Clinic. We are unable to get your details. Please provide all the necessary details to the automated chatbot! .Make sure to select an option of new patient when you are asked for one'
 				})
 				.then((message) => {
 					console.log(message.sid);
@@ -310,7 +321,7 @@ export class PatientDetailComponent implements OnInit {
 				.create({
 					from: 'whatsapp:+14155238886',
 					to: sendTo,
-					body: 'Prescription_for_' + this.personalData.name.replace(" ","_"), //showing as undefined in watsapp solve this
+					body: 'Prescription_for_' + this.personalData.name.replace(' ', '_'), //showing as undefined in watsapp solve this
 					mediaUrl: url
 					// 'https://firebasestorage.googleapis.com/v0/b/vocal-clinic.appspot.com/o/Prescriptions%2Fprescription_Fri_Oct_16_2020_12_13_17.pdf?alt=media&token=a1fcd057-9ca6-4512-b1c9-6cd20d553014'
 				})
