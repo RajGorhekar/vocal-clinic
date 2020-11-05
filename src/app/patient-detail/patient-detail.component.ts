@@ -127,7 +127,7 @@ export class PatientDetailComponent implements OnInit {
 			.then((doc) => {
 				if (doc.exists) {
 					this.sendPDF(null);
-					// doc.ref.delete();
+					doc.ref.delete();
 					console.log('Document deleted');
 				} else {
 					console.log('No such document!');
